@@ -74,6 +74,10 @@ function verificaMotivo(motivo) {
             elemento.removeChild(elemento.firstChild);
         }
     }
-
-
 }
+
+$(document).ready(function() {
+	$("header").load("/ProjetoTrilhaWeb/pages/site/general/cabecalho.html");
+	$("nav").load("/ProjetoTrilhaWeb/pages/site/general/menu.html");
+	$("footer").load("/ProjetoTrilhaWeb/pages/site/general/rodape.html");
+})
