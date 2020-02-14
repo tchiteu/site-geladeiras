@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import br.com.coldigogeladeiras.bd.Conexao;
+import br.com.coldigogeladeiras.jdbc.JDBCMarcaDAO;
 import br.com.coldigogeladeiras.modelo.Marca;
 
 @Path("marca")
@@ -19,11 +20,18 @@ public class MarcaRest {
 	@GET
 	@Path("/buscar")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response buscar(){
-		
+	public Response buscar(){		
+		try {
 		List<Marca> listaMarcas = new ArrayList<Marca>();
-		
+			
 		Conexao conec = new Conexao();
 		Connection conexao = conec.abrirConexao();
+		JDBCMarcaDAO jdbcMarca = new JDBCMarcaDAO(conexao);
+		listaMarcas = jdbcMarca.buscar();
+		conec.fecharConexao();	
+		} catch (Exception e) {
+			e.printStackTrace();
+			return this.buildErrorResponse(e.getMessage());
+		}
 	}
 }
