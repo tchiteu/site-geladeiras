@@ -14,11 +14,10 @@ $(document).ready(function() {
 					option.innerHTML = ("Escolha")
 					$("#selMarca").append(option)
 					
-					for(var i = 0; i < marcas.lenght; i++) {
+					for(var i = 0; i < marcas.length; i++) {
 						var option = document.createElement("option")
 						option.setAttribute("value", marcas[i].id)
 						option.innerHTML = (marcas[i].nome)
-						console.log(option)
 						$("#selMarca").append(option)
 					}
 				} else {
