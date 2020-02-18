@@ -8,7 +8,19 @@ $(document).ready(function() {
 			url: "/ProjetoTrilhaWeb/rest/marca/buscar",
 			success: function (marcas) {
 				if(marcas) {
+					$("#selMarca").html("")
+					var option = document.createElement("option")
+					option.setAttribute("value", "")
+					option.innerHTML = ("Escolha")
+					$("#selMarca").append(option)
 					
+					for(var i = 0; i < marcas.lenght; i++) {
+						var option = document.createElement("option")
+						option.setAttribute("value", marcas[i].id)
+						option.innerHTML = (marcas[i].nome)
+						console.log(option)
+						$("#selMarca").append(option)
+					}
 				} else {
 					$("#selMarca").html("")
 					var option = document.createElement("option")
