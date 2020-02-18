@@ -115,3 +115,7 @@ footer {
     padding: 10px;
 }
 
+#modalAviso {
+	display: none;
+}
+
