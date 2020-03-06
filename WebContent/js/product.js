@@ -52,7 +52,7 @@ $(document).ready(function() {
 		produto.capacidade = document.frmAddProduto.capacidade.value
 		produto.valor = document.frmAddProduto.valor.value
 		
-		if(produto.categoria || produto.marcaId || produto.capacidade || produto.valor) {
+		if(produto.categoria == "" || produto.marcaId == "" || produto.capacidade == "" || produto.valor == "") {
 			COLDIGO.exibirAviso("Preencha todos os campos!")
 		} else {
 			$.ajax({
@@ -60,7 +60,7 @@ $(document).ready(function() {
 				url: `${COLDIGO.PATH}produto/inserir`,
 				data:JSON.stringify(produto),
 				success: function (msg) {
-					COLDIGO.eibirAviso(msg)
+					COLDIGO.exibirAviso(msg)
 					$("#addProduto").trigger("reset")
 				},
 				error: function (info) {

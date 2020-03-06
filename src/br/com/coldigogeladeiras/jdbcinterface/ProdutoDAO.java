@@ -1,5 +1,7 @@
 package br.com.coldigogeladeiras.jdbcinterface;
 
-public class ProdutoDAO {
+import br.com.coldigogeladeiras.modelo.Produto;
 
+public interface ProdutoDAO {
+	public boolean inserir(Produto produto);
 }
