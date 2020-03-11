@@ -36,7 +36,6 @@ $(document).ready(function(){
 				}
 		};
 		$("#modalAviso").html(aviso);
-		console.log($("#modalAviso"));
 		$("#modalAviso").dialog(modal);
 	}
 	
