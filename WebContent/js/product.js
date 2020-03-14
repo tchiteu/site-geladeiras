@@ -72,7 +72,7 @@ $(document).ready(function() {
 	
 	COLDIGO.produto.buscar = function(){
 		var valorBusca = $("#campoBuscaProduto").val()
-		
+		valorBusca = 'a'
 		$.ajax({
 			type: "GET",
 			url: COLDIGO.PATH + "produto/buscar",

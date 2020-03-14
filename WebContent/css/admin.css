@@ -81,10 +81,17 @@ section h2, section h3 {
 	text-align: center;
 }
 
+.frmInserir, .frmFiltrar {
+	margin: 0px auto;
+	margin-bottom: 10px
+}
 .frmInserir {
 	margin: 0px auto;
 	margin-bottom: 10px;
 	width: 500px;
+}
+.frmFiltrar {
+	width: 350px;
 }
 .frmInserir label {
 	width: 200px;
@@ -93,7 +100,7 @@ section h2, section h3 {
 	width: 300px;
 	padding: 2px 0;
 }
-.frmInserir button {
+.frmInserir button, frmFiltrar button {
 	width: 100px;
 	margin: 0 1%;
 	background-color: #b1ccf5;
@@ -101,13 +108,29 @@ section h2, section h3 {
 	font-size: 16px;
 	float: right;
 }
-
 .frmInserir .aviso {
 	background-color: #ff0000;
 	color: #fff;
 	font-weight: bold;
 }
 
+.listaRegistros {
+	margin-bottom: 10px;
+}
+.listaRegistros table{
+	border: 1px solid #000;
+	border-collapse: collapse;
+	margin: 0 auto;
+	min-width: 50%;	
+}
+.listaRegistros table th{
+	text-align: center;
+	font-size: 18px;
+	font-weight: bold;
+	color: #fff;
+	padding:0 5px;
+	border: transparent;
+}
 footer {
     background-color: #005f89;
     color: #ffffff;
