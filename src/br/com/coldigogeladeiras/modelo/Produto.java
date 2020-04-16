@@ -35,4 +35,28 @@ public class Produto implements Serializable{
 	public float getValor() {
 		return this.valor;
 	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public void setCategoria(String categoria) {
+		this.categoria = categoria;
+	}
+	
+	public void setMarcaId(int marcaId) {
+		this.marcaId = marcaId;
+	}
+	
+	public void setModelo(String modelo) {
+		this.modelo = modelo;
+	}
+	
+	public void setCapacidade(int capacidade) {
+		this.capacidade = capacidade;
+	}
+	
+	public void setValor(float valor) {
+		this.valor = valor;
+	}
 }
