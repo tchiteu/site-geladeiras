@@ -131,6 +131,31 @@ section h2, section h3 {
 	padding:0 5px;
 	border: transparent;
 }
+.listaRegistros tr, .listaRegistros td, .listaRegistros th {
+	border: 1px solid #B0C4DE;
+	padding: 0px 5px;
+}
+.listaRegistros tr, .listaRegistros td {
+	font-size: 16px;
+}
+.listaRegistros tr:nth-child(even) {
+	background-color: #B1CCf5;
+}
+.listaRegistros tr:nth-child(odd) {
+	background-color: #83AFD3;
+}
+
+.listaRegistros .acoes {
+	width: 70px;
+}
+
+.listaRegistros table img{
+	padding: 0 5px;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+}
+
 footer {
     background-color: #005f89;
     color: #ffffff;

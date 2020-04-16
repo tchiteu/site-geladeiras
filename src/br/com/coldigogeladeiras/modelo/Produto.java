@@ -33,7 +33,6 @@ public class Produto implements Serializable{
 	}
 
 	public float getValor() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.valor;
 	}
 }
