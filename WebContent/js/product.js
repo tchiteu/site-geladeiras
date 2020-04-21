@@ -70,8 +70,9 @@ $(document).ready(function() {
 				url: `${COLDIGO.PATH}produto/inserir`,
 				data:JSON.stringify(produto),
 				success: function (msg) {
-					COLDIGO.exibirAviso(msg)
-					$("#addProduto").trigger("reset")
+					COLDIGO.produto.buscar();
+					COLDIGO.exibirAviso(msg);
+					$("#addProduto").trigger("reset");
 				},
 				error: function (info) {
 					COLDIGO.exibirAviso(`Erro ao cadastrar um novo produto: ${info.status} - ${info.statusText}`)
@@ -152,7 +153,6 @@ $(document).ready(function() {
 			url: COLDIGO.PATH + "produto/buscarPorId",
 			data: "id="+id,
 			success: function(produto) {
-				console.log(typeof produto)
 				document.frmEditaProduto.idProduto.value = produto.id;
 				document.frmEditaProduto.modelo.value = produto.modelo;
 				document.frmEditaProduto.capacidade.value = produto.capacidade;
@@ -176,7 +176,7 @@ $(document).ready(function() {
 						modal: true,
 						buttons:{
 							"Salvar": function() {
-								
+								COLDIGO.produto.editar();
 							},
 							"Cancelar": function() {
 								$(this).dialog("close");
@@ -191,6 +191,30 @@ $(document).ready(function() {
 			},
 			error: function(info){
 				COLDIGO.exibirAviso("Erro ao buscar produto para edição: "+ info.status + " - " + info.statusText);
+			}
+		})
+	}
+	
+	COLDIGO.produto.editar = function() {
+		var produto = new Object();
+		produto.id = document.frmEditaProduto.idProduto.value;
+		produto.categoria = document.frmEditaProduto.categoria.value;
+		produto.marcaId = document.frmEditaProduto.marcaId.value;
+		produto.modelo = document.frmEditaProduto.modelo.value;
+		produto.capacidade = document.frmEditaProduto.capacidade.value;
+		produto.valor = document.frmEditaProduto.valor.value;
+		
+		$.ajax({
+			type: "PUT",
+			url: COLDIGO.PATH + "produto/alterar",
+			data: JSON.stringify(produto),
+			success: function(msg) {
+				COLDIGO.exibirAviso(msg);
+				COLDIGO.produto.buscar();
+				$("#modalEditaProduto").dialog("close");
+			},
+			error: function(info) {
+				COLDIGO.exibirAviso("Erro ao editar produto: "+ info.status + " - "+ info.statusText);
 			}
 		})
 	}
