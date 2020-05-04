@@ -9,10 +9,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import br.com.coldigogeladeiras.bd.Conexao;
 import br.com.coldigogeladeiras.jdbc.JDBCMarcaDAO;
@@ -25,15 +27,16 @@ public class MarcaRest extends UtilRest {
 	
 	@GET
 	@Path("/buscar")
+	@Consumes("application/*")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response buscar(){		
+	public Response buscar(String valorBusca){		
 		try {
 			List<Marca> listaMarcas = new ArrayList<Marca>();
 				
 			Conexao conec = new Conexao();
 			Connection conexao = conec.abrirConexao();
 			JDBCMarcaDAO jdbcMarca = new JDBCMarcaDAO(conexao);
-			listaMarcas = jdbcMarca.buscar();
+			listaMarcas = jdbcMarca.buscarPorNome(valorBusca);
 			conec.fecharConexao();	
 			return this.buildResponse(listaMarcas);
 		} catch (Exception e) {

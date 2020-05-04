@@ -67,6 +67,34 @@ public class JDBCMarcaDAO implements MarcaDAO{
 		}
 		return true;
 	}
-
+	
+	public List<Marca> buscarPorNome(String valorBusca) {
+		String comando = "SELECT * FROM marcas WHERE nome LIKE '%" + valorBusca + "%' ";
+		
+		List<Marca> listMarcas = new ArrayList<Marca>();
+		
+		Marca marca = null;
+		
+		try { 
+			Statement stmt = conexao.createStatement();
+			ResultSet rs = stmt.executeQuery(comando);
+			
+			while(rs.next()) {
+				marca = new Marca();
+				
+				int id = rs.getInt("id");
+				String nome = rs.getString("nome");
+				
+				marca.setId(id);
+				marca.setNome(nome);
+				
+				listMarcas.add(marca);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return listMarcas;
+	}
 }
 
