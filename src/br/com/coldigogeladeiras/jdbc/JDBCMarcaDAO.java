@@ -19,35 +19,6 @@ public class JDBCMarcaDAO implements MarcaDAO{
 		this.conexao = conexao;
 	}
 	
-	public List<Marca> buscar() {
-		String comando = "SELECT * FROM marcas";
-		
-		List<Marca> listMarcas = new ArrayList<Marca>();
-		
-		Marca marca = null;
-		
-		try { 
-			Statement stmt = conexao.createStatement();
-			ResultSet rs = stmt.executeQuery(comando);
-			
-			while(rs.next()) {
-				marca = new Marca();
-				
-				int id = rs.getInt("id");
-				String nome = rs.getString("nome");
-				
-				marca.setId(id);
-				marca.setNome(nome);
-				
-				listMarcas.add(marca);
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		
-		return listMarcas;
-	}
-	
 	public boolean inserir(Marca marca) {
 		String comando = "INSERT INTO marcas "
 				+ "(id, nome) "
@@ -68,8 +39,13 @@ public class JDBCMarcaDAO implements MarcaDAO{
 		return true;
 	}
 	
-	public List<Marca> buscarPorNome(String valorBusca) {
-		String comando = "SELECT * FROM marcas WHERE nome LIKE '%" + valorBusca + "%' ";
+	public List<Marca> buscar(String valorBusca) {
+		String comando = "SELECT * FROM marcas ";
+		
+		if(valorBusca != null) {			
+			System.out.print(valorBusca);
+			comando += "WHERE nome LIKE '%" + valorBusca + "%';";
+		}
 		
 		List<Marca> listMarcas = new ArrayList<Marca>();
 		
@@ -95,6 +71,64 @@ public class JDBCMarcaDAO implements MarcaDAO{
 		}
 		
 		return listMarcas;
+	}
+	
+	public boolean alterar(Marca marca) {
+		String comando = "UPDATE marcas "
+				+ "SET nome=? WHERE id=?";
+		PreparedStatement p;
+		
+		try {
+			p = this.conexao.prepareStatement(comando);
+			p.setString(1, marca.getNome());
+			p.setInt(2, marca.getId());
+			p.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean deletar(int id) {
+		String comando = "DELETE FROM marcas WHERE id = ?";
+		PreparedStatement p;
+		
+		try {
+			p = this.conexao.prepareStatement(comando);
+			p.setInt(1,  id);
+			p.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public Marca buscarPorId(int id) {
+		String comando = "SELECT * FROM marcas WHERE marcas.id = ?";
+		Marca marca = new Marca();
+		
+		try {
+			PreparedStatement p = this.conexao.prepareStatement(comando);
+			p.setInt(1, id);
+			ResultSet rs = p.executeQuery();
+			
+			while(rs.next()) {
+				marca = new Marca();
+				
+				int idNovo = rs.getInt("id");
+				String nome = rs.getString("nome");
+				
+				marca.setId(idNovo);
+				marca.setNome(nome);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return marca;
 	}
 }
 

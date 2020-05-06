@@ -10,7 +10,7 @@ $(document).ready(function() {
 		
 		$.ajax({
 			type: "GET",
-			url: `${COLDIGO.PATH}marca/buscar`,
+			url: COLDIGO.PATH + "marca/buscar",
 			success: function (marcas) {
 				if(marcas) {
 					$(select).html("");
@@ -54,7 +54,6 @@ $(document).ready(function() {
 	COLDIGO.produto.carregaMarcas()
 	
 	COLDIGO.produto.cadastrar = function() {
-		
 		var produto = new Object()
 		produto.categoria = document.frmAddProduto.categoria.value
 		produto.marcaId = document.frmAddProduto.marcaId.value

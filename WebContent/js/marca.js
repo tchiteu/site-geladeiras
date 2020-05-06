@@ -14,7 +14,7 @@ $(document).ready(function() {
 				url: `${COLDIGO.PATH}marca/inserir`,
 				data:JSON.stringify(marca),
 				success: function(msg) {
-//					COLDIGO.marca.buscar();
+					COLDIGO.marca.buscar();
 					COLDIGO.exibirAviso(msg);
 					$("#addMarca").trigger("reset");
 				},
@@ -35,7 +35,7 @@ $(document).ready(function() {
 		if (listaDeMarcas != undefined && listaDeMarcas.length > 0) {
 			for(var i=0; i < listaDeMarcas.length; i++) {
 				tabela += "<tr>" +
-				"<td>"+listaDeMarcas[i].nome+"</td>" + +
+				"<td>"+listaDeMarcas[i].nome+"</td>" +
 				"<td>" + 
 					"<a onclick=\"COLDIGO.marca.exibirEdicao('"+listaDeMarcas[i].id+"')\"><img src='../../imgs/edit.png' alt='Editar registro'></a>" + 
 					"<a onclick=\"COLDIGO.marca.excluir('"+listaDeMarcas[i].id+"')\"><img src='../../imgs/delete.png' alt='Excluir registro'></a>" +
@@ -51,16 +51,13 @@ $(document).ready(function() {
 		return tabela;
 	};
 	
-	COLDIGO.marca.buscarPorNome = function() {
+	COLDIGO.marca.buscar = function() {
 		const valorBusca = $("#campoBuscaMarca").val();
-		console.log(valorBusca);
 		$.ajax({
 			type: "GET",
-			url: `${COLDIGO.PATH}marca/buscar`,
-			data: "	="+valorBusca,
+			url: COLDIGO.PATH + "marca/buscar",
+			data: "valorBusca="+valorBusca,
 			success: function(dados) {
-				console.log(dados);
-				dados = JSON.parse(dados);
 				$("#listaMarcas").html(COLDIGO.marca.exibir(dados));
 			},
 			error: function(info) {
@@ -69,6 +66,74 @@ $(document).ready(function() {
 		})
 	}
 	
+	COLDIGO.marca.excluir = function(id) {
+		$.ajax({
+			type: "DELETE",
+			url: COLDIGO.PATH + "marca/excluir/"+id,
+			success: function(msg) {
+				COLDIGO.exibirAviso(msg);
+				COLDIGO.marca.buscar();
+			},
+			error: function(info) {
+				COLDIGO.exibirAviso("Erro ao excluir marca: "+ info.status +" - "+ info.statusText);
+			}
+		});
+	}
 	
-//	COLDIGO.marca.buscar();
+	COLDIGO.marca.exibirEdicao = function(id) {
+		$.ajax({
+			type: "GET",
+			url: COLDIGO.PATH + "marca/buscarPorId",
+			data: "id="+id,
+			success: function(marca) {
+				document.frmEditaMarca.idMarca.value = marca.id;
+				document.frmEditaMarca.nome.value = marca.nome;
+				
+				var modalEditaMarca = {
+						title: "Editar Marca",
+						height: 400,
+						width: 550,
+						modal: true,
+						buttons:{
+							"Salvar": function() {
+								COLDIGO.marca.editar();
+							},
+							"Cancelar": function() {
+								$(this).dialog("close");
+							}
+						},
+						close: function() {
+							
+						}
+				};
+				
+				$("#modalEditaMarca").dialog(modalEditaMarca);
+			},
+			error: function(info){
+				COLDIGO.exibirAviso("Erro ao buscar marca para edição: "+ info.status + " - " + info.statusText);
+			}
+		})
+	}
+	
+	COLDIGO.marca.editar = function() {
+		var marca = new Object();
+		marca.id = document.frmEditaMarca.idMarca.value;
+		marca.nome = document.frmEditaMarca.nome.value;
+		
+		$.ajax({
+			type: "PUT",
+			url: COLDIGO.PATH + "marca/alterar",
+			data: JSON.stringify(marca),
+			success: function(msg) {
+				COLDIGO.exibirAviso(msg);
+				COLDIGO.marca.buscar();
+				$("#modalEditaMarca").dialog("close");
+			},
+			error: function(info) {
+				COLDIGO.exibirAviso("Erro ao editar marca: "+ info.status + " - "+ info.statusText);
+			}
+		})
+	}
+	
+	COLDIGO.marca.buscar();
 })
