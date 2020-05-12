@@ -7,43 +7,73 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.gson.JsonObject;
 
 import br.com.coldigogeladeiras.jdbcinterface.ProdutoDAO;
 import br.com.coldigogeladeiras.modelo.Produto;
+import br.com.coldigogeladeiras.modelo.Marca;
+import br.com.coldigogeladeiras.jdbc.JDBCMarcaDAO;
 
 public class JDBCProdutoDAO implements ProdutoDAO {
+	public class Resultado {
+		public boolean status;
+		public String msg;
+	}
+	
 	private Connection conexao;
 	
 	public JDBCProdutoDAO(Connection conexao) {
 		this.conexao = conexao;
 	}
 	
-	public boolean inserir(Produto produto) {
+	public Resultado inserir(Produto produto) {
+		Resultado resultado = new Resultado();
+		
 		String comando = "INSERT INTO produtos "
 				+ "(id, categoria, modelo, capacidade, valor, marcas_id) "
 				+ "VALUES (?,?,?,?,?,?)";
 		PreparedStatement p;
 		
-		try {
-			p = this.conexao.prepareStatement(comando);
-			
-			p.setInt(1, produto.getId());
-			p.setString(2, produto.getCategoria());
-			p.setString(3,  produto.getModelo());
-			p.setInt(4, produto.getCapacidade());
-			p.setFloat(5, produto.getValor());
-			p.setInt(6, produto.getMarcaId());
-			
-			p.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
+		if(this.verificaMarca(produto.getMarcaId()) == false) {
+			resultado.status = false;
+			resultado.msg = "A marca selecionada não existe, recarregue a página e tente novamente.";
+		} else {
+			try {
+				p = this.conexao.prepareStatement(comando);
+				
+				p.setInt(1, produto.getId());
+				p.setString(2, produto.getCategoria());
+				p.setString(3,  produto.getModelo());
+				p.setInt(4, produto.getCapacidade());
+				p.setFloat(5, produto.getValor());
+				p.setInt(6, produto.getMarcaId());
+				
+				p.execute();
+				resultado.status = true;
+				resultado.msg = "Produto cadastrado com sucesso!";
+			} catch (SQLException e) {
+				e.printStackTrace();
+				resultado.status = false;
+				resultado.msg = "Erro ao cadastrar produto!";
+			}
 		}
-		return true;
+		
+		return resultado;
 	}
 	
+	private boolean verificaMarca(int id) {
+		JDBCMarcaDAO jdbcmarca = new JDBCMarcaDAO(conexao);
+		Marca marca = jdbcmarca.buscarPorId(id);
+		
+		if(marca.getNome() == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	public List<JsonObject> buscarPorNome(String nome) {
 		String comando = "SELECT produtos.*, marcas.nome as marca FROM produtos "
 				+ "INNER JOIN marcas ON produtos.marcas_id = marcas.id ";

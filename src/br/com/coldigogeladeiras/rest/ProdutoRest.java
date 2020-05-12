@@ -22,6 +22,7 @@ import com.google.gson.JsonObject;
 import br.com.coldigogeladeiras.bd.Conexao;
 import br.com.coldigogeladeiras.jdbc.JDBCProdutoDAO;
 import br.com.coldigogeladeiras.modelo.Produto;
+import br.com.coldigogeladeiras.jdbc.JDBCProdutoDAO.Resultado;
 
 @Path("produto")
 public class ProdutoRest extends UtilRest{
@@ -36,17 +37,10 @@ public class ProdutoRest extends UtilRest{
 			Connection conexao = conec.abrirConexao();
 			
 			JDBCProdutoDAO jdbcProduto = new JDBCProdutoDAO(conexao);
-			boolean retorno = jdbcProduto.inserir(produto);
-			String msg = "";
-			
-			if(retorno) {
-				msg = "Produto cadastrado com sucesso!";
-			} else {
-				msg = "Erro ao cadastrar produto.";
-			}
+			Resultado resultado = jdbcProduto.inserir(produto);
 			
 			conec.fecharConexao();
-			return this.buildResponse(msg);
+			return this.buildResponse(resultado.msg);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return this.buildErrorResponse(e.getMessage());
@@ -89,7 +83,7 @@ public class ProdutoRest extends UtilRest{
 			
 			String msg = "";
 			if(retorno) {
-				msg = "Produto excluído com sucesso!";
+				msg = "Produto excluï¿½do com sucesso!";
 			} else {
 				msg = "Erro ao excluir produto.";
 			}

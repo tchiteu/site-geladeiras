@@ -15,6 +15,8 @@ import br.com.coldigogeladeiras.modelo.Produto;
 public class JDBCMarcaDAO implements MarcaDAO{
 	private Connection conexao;
 	
+	public JDBCMarcaDAO() {	}
+	
 	public JDBCMarcaDAO(Connection conexao) {
 		this.conexao = conexao;
 	}
