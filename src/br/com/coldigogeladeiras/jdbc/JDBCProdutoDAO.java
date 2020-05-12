@@ -166,6 +166,37 @@ public class JDBCProdutoDAO implements ProdutoDAO {
 		return produto;
 	}
 	
+	public Produto buscaPorMarcaId(int idMarca) {
+		String comando = "SELECT * FROM produtos WHERE produtos.marcas_id = ?";
+		Produto produto = new Produto();
+		
+		try {
+			PreparedStatement p = this.conexao.prepareStatement(comando);
+			p.setInt(1, idMarca);
+			ResultSet rs = p.executeQuery();
+			
+			while (rs.next()) {
+				int id = rs.getInt("id");
+				String categoria = rs.getString("categoria");
+				String modelo = rs.getString("modelo");
+				int capacidade = rs.getInt("capacidade");
+				float valor = rs.getFloat("valor");
+				int marcaId = rs.getInt("marcas_id");
+				
+				produto.setId(id);
+				produto.setCategoria(categoria);
+				produto.setMarcaId(marcaId);
+				produto.setModelo(modelo);
+				produto.setCapacidade(capacidade);
+				produto.setValor(valor);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return produto;
+	}
+	
 	public boolean alterar(Produto produto) {
 		String comando = "UPDATE produtos "
 				+ "SET categoria=?, modelo=?, capacidade=?, valor=?, marcas_id=? "

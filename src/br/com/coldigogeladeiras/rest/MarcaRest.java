@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
 
 import br.com.coldigogeladeiras.bd.Conexao;
 import br.com.coldigogeladeiras.jdbc.JDBCMarcaDAO;
+import br.com.coldigogeladeiras.jdbc.JDBCMarcaDAO.Resultado;
 import br.com.coldigogeladeiras.jdbc.JDBCProdutoDAO;
 import br.com.coldigogeladeiras.modelo.Marca;
 import br.com.coldigogeladeiras.modelo.Produto;
@@ -84,18 +85,11 @@ public class MarcaRest extends UtilRest {
 			Connection conexao = conec.abrirConexao();
 			JDBCMarcaDAO jdbcMarca = new JDBCMarcaDAO(conexao);
 			
-			boolean retorno = jdbcMarca.deletar(id);
-			
-			String msg = "";
-			if(retorno) {
-				msg = "Marca excluída com sucesso!";
-			} else {
-				msg = "Erro ao excluir marca.";
-			}
+			Resultado resultado = jdbcMarca.deletar(id);
 			
 			conec.fecharConexao();
 			
-			return this.buildResponse(msg);
+			return this.buildResponse(resultado.msg);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return this.buildErrorResponse(e.getMessage());

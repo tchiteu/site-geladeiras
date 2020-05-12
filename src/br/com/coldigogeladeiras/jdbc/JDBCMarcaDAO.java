@@ -13,6 +13,11 @@ import br.com.coldigogeladeiras.modelo.Marca;
 import br.com.coldigogeladeiras.modelo.Produto;
 
 public class JDBCMarcaDAO implements MarcaDAO{
+	public class Resultado {
+		public boolean status;
+		public String msg;
+	}
+	
 	private Connection conexao;
 	
 	public JDBCMarcaDAO() {	}
@@ -45,7 +50,6 @@ public class JDBCMarcaDAO implements MarcaDAO{
 		String comando = "SELECT * FROM marcas ";
 		
 		if(valorBusca != null) {			
-			System.out.print(valorBusca);
 			comando += "WHERE nome LIKE '%" + valorBusca + "%';";
 		}
 		
@@ -93,19 +97,41 @@ public class JDBCMarcaDAO implements MarcaDAO{
 		return true;
 	}
 	
-	public boolean deletar(int id) {
+	public Resultado deletar(int id) {
 		String comando = "DELETE FROM marcas WHERE id = ?";
 		PreparedStatement p;
+		Resultado resultado = new Resultado();
 		
-		try {
-			p = this.conexao.prepareStatement(comando);
-			p.setInt(1,  id);
-			p.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if(this.verificaVinculo(id)) {
+			resultado.status = false;
+			resultado.msg = "Marca vínculada a um produto.";
+		} else {
+			try {
+				p = this.conexao.prepareStatement(comando);
+				p.setInt(1,  id);
+				p.execute();
+				
+				resultado.status = true;
+				resultado.msg = "Marca deleta com sucesso.";
+			} catch (SQLException e) {
+				e.printStackTrace();
+				resultado.status = false;
+				resultado.msg = "Erro ao deletar marca.";
+			}
+		}
+		
+		return resultado;
+	}
+	
+	public boolean verificaVinculo(int id) {
+		JDBCProdutoDAO produtoDAO = new JDBCProdutoDAO(conexao);
+		Produto produto = produtoDAO.buscaPorMarcaId(id);
+		
+		if(produto.getModelo() != null) {
+			return true;
+		} else {
 			return false;
 		}
-		return true;
 	}
 	
 	public Marca buscarPorId(int id) {
