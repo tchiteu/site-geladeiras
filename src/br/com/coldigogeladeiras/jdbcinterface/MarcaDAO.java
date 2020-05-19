@@ -13,4 +13,5 @@ public interface MarcaDAO {
 	public Marca buscarPorId(int id);
 	public boolean alterar(Marca marca);
 	public boolean verificaVinculo(int id);
+	public Resultado inativar(int id);
 }

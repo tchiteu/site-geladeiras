@@ -66,9 +66,11 @@ public class JDBCMarcaDAO implements MarcaDAO{
 				
 				int id = rs.getInt("id");
 				String nome = rs.getString("nome");
+				int status = rs.getInt("status");
 				
 				marca.setId(id);
 				marca.setNome(nome);
+				marca.setStatus(status);
 				
 				listMarcas.add(marca);
 			}
@@ -148,15 +150,43 @@ public class JDBCMarcaDAO implements MarcaDAO{
 				
 				int idNovo = rs.getInt("id");
 				String nome = rs.getString("nome");
+				int status = rs.getInt("status");
 				
 				marca.setId(idNovo);
 				marca.setNome(nome);
+				marca.setStatus(status);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return marca;
+	}
+	
+	public Resultado inativar(int id) {
+		Resultado resultado = new Resultado();
+		Marca marca = this.buscarPorId(id);
+		String comando = "";
+		
+		if(marca.getStatus() == 1) {
+			comando = "UPDATE marcas SET status = 0 WHERE id = ?";
+			resultado.msg = "Marca inativada com sucesso.";
+		} else {
+			comando = "UPDATE marcas SET status = 1 WHERE id = ?";
+			resultado.msg = "Marca ativada com sucesso.";
+		}	
+		
+		try {
+			PreparedStatement p = this.conexao.prepareStatement(comando);
+			p.setInt(1, id);
+			p.execute();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			resultado.msg = "Erro ao ativar/inativar marca";
+		}
+		
+		return resultado;
 	}
 }
 

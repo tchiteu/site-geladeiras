@@ -143,4 +143,24 @@ public class MarcaRest extends UtilRest {
 			return this.buildErrorResponse(e.getMessage());
 		}
 	}
+	
+	@PUT
+	@Path("/inativar/{id}")
+	@Consumes("application/*")
+	public Response inativar(@PathParam("id") int id) {
+		try {
+			Conexao conec = new Conexao();
+			Connection conexao = conec.abrirConexao();
+			JDBCMarcaDAO jdbcMarca = new JDBCMarcaDAO(conexao);
+			
+			Resultado resultado = jdbcMarca.inativar(id);
+			
+			conec.fecharConexao();
+			
+			return this.buildResponse(resultado.msg);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return this.buildErrorResponse(e.getMessage());
+		}
+	}
 }

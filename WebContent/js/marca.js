@@ -33,16 +33,18 @@ $(document).ready(function() {
 		"</tr>";
 		
 		if (listaDeMarcas != undefined && listaDeMarcas.length > 0) {
-			for(var i=0; i < listaDeMarcas.length; i++) {
+			listaDeMarcas.map((marca, index) => {
+				let checked = (marca.status) ? "checked" : "";
+				
 				tabela += "<tr>" +
-				"<td>"+listaDeMarcas[i].nome+"</td>" +
-				"<td>" + 
-					"<a onclick=\"COLDIGO.marca.exibirEdicao('"+listaDeMarcas[i].id+"')\"><img src='../../imgs/edit.png' alt='Editar registro'></a>" + 
-					"<a onclick=\"COLDIGO.marca.excluir('"+listaDeMarcas[i].id+"')\"><img src='../../imgs/delete.png' alt='Excluir registro'></a>" +
-				"</td>" +
+					"<td>"+ marca.nome +"</td>" +
+					"<td><div class='acoes-td'>" + 
+					"<a onclick=\"COLDIGO.marca.exibirEdicao('"+ marca.id +"')\"><img src='../../imgs/edit.png' alt='Editar registro'></a>" + 
+					"<label class='switch'><input onclick=\"COLDIGO.marca.inativar('"+ marca.id +"')\" id='checkbox_"+ marca.id +"' type='checkbox' "+ checked +"> <span class='slider'></span></label>"+
+					"<a onclick=\"COLDIGO.marca.excluir('"+ marca.id +"')\"><img src='../../imgs/delete.png' alt='Excluir registro'></a>"
+				"</div></td>" +
 				"</tr>"
-			}
-			
+			})	
 		} else if (listaDeMarcas == "") {
 			tabela += "<tr><td colspan='6'>Nenhum registro encontrado</td></tr>"
 		}
@@ -134,6 +136,23 @@ $(document).ready(function() {
 			}
 		})
 	}
+	
+	COLDIGO.marca.inativar = function(id) {
+		$.ajax({
+			type: "PUT",
+			url: COLDIGO.PATH + `marca/inativar/${id}`,
+			success: function(msg) {
+				COLDIGO.exibirAviso(msg);
+				COLDIGO.marca.buscar();
+			},
+			error: function(msg) {
+				COLDIGO.exibirAviso(msg);
+				
+				let slider = document.getElementById(`checkbox_${id}`);
+				(slider.checked) ? slider.checked = false : slider.checked = true;
+			}
+		})
+	} 
 	
 	COLDIGO.marca.buscar();
 })
